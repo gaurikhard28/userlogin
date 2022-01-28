@@ -65,24 +65,8 @@ class _login_pageState extends State<login_page> {
               ),
                     Stack(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            if(isLoading)
-                            {
-                              return;
-                            }
-                            if(_contactController.text.isEmpty||_passwordController.text.isEmpty)
-                            {
-                              scaffoldMessenger.showSnackBar(SnackBar(content:Text("Please Fill all fileds")));
-                              return;
-                            }
-                            login(_contactController.text,_passwordController.text);
-                            setState(() {
-                              isLoading=true;
-                            });
-                            //Navigator.pushReplacementNamed(context, "/home");
-                          },
-                          child: Container(
+
+                           Container(
                             width: 300,
                             height: 80,
                             padding: EdgeInsets.symmetric(
@@ -93,8 +77,23 @@ class _login_pageState extends State<login_page> {
                             ),
                             child: ElevatedButton(
                               onPressed: () {
-                                isLoading= true;
-                              },
+
+                                  if (isLoading) {
+                                    return;
+                                  }
+                                  if (_contactController.text.isEmpty ||
+                                      _passwordController.text.isEmpty) {
+                                    scaffoldMessenger.showSnackBar(SnackBar(
+                                        content: Text(
+                                            "Please Fill all fileds")));
+                                    return;
+                                  }
+                                  login(_contactController.text,
+                                      _passwordController.text);
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                },
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.black,
                                 shape: RoundedRectangleBorder(
@@ -111,7 +110,7 @@ class _login_pageState extends State<login_page> {
 
                             ),
                             ),
-                          ),
+
                         ],),
                         Positioned(child: (isLoading)?Center(child: Container(height:26,width: 26,child: CircularProgressIndicator(backgroundColor: Colors.black,))):Container(),right: 30,bottom: 0,top: 0,)
 
