@@ -85,32 +85,29 @@ class _signupState extends State<signup> {
 
                               borderRadius: BorderRadius.circular(50),
                             ),
-                            child: InkWell(
-                              onTap: (){
-                                if(isLoading)
-                                {
-                                  return;
-                                }
-                                if(_nameController.text.isEmpty)
-                                {
-                                  scaffoldMessenger.showSnackBar(SnackBar(content:Text("Please Enter Name")));
-                                  return;
-                                }
-                                if(_passwordController.text.isEmpty||_passwordController.text.length<6)
-                                {
-                                  scaffoldMessenger.showSnackBar(SnackBar(content:Text("Password should be min 6 characters")));
-                                  return;
-                                }
-                                signup(_nameController.text,_contactController.text,_passwordController.text);
-                              },
+
+
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  setState(() {
-                                    isLoading= true;
-                                  });
+                                      if(isLoading)
+                                         {
+                                        return;
+                                           }
+                                         if(_nameController.text.isEmpty)
+                                          {
+                                           scaffoldMessenger.showSnackBar(SnackBar(content:Text("Please Enter Name")));
+                                               return;
+                                             }
+                                         if(_passwordController.text.isEmpty)
+                                          {
+                                             scaffoldMessenger.showSnackBar(SnackBar(content:Text("Please Enter Password")));
+                                                 return;
+                                               }
+                                            signup(_nameController.text,_contactController.text,_passwordController.text);
+                                           },
 
 
-                                },
+
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.black,
                                   shape: RoundedRectangleBorder(
@@ -127,7 +124,7 @@ class _signupState extends State<signup> {
 
                               ),
                             ),
-                          ),
+
                           Positioned(child: (isLoading)?Center(child: Container(height:26,width: 26,child: CircularProgressIndicator(backgroundColor: Colors.black,))):Container(),right: 30,bottom: 0,top: 0,)
 
                         ],
