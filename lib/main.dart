@@ -16,7 +16,7 @@ class _MyAppState extends State<MyApp> {
 
  void initState() {
    super.initState();
-   getPref();
+
  }
 
 
@@ -31,26 +31,17 @@ class _MyAppState extends State<MyApp> {
           '/signup': (BuildContext context) => new signup(),
           '/profile': (BuildContext context) => new profile(),
           },
-        home:(
-      (_loginStatus==0)?profile():signup()
+        home:(signup()
       )
     );
   }
-  var _loginStatus=0;
-  getPref() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      _loginStatus = preferences.getInt("status")!;
 
 
-    });
-}
 
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
+
+
+
+
 }
 
 

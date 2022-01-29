@@ -14,20 +14,22 @@ class profile extends StatefulWidget {
 }
 
 class _profileState extends State<profile> {
-var _loginName="";
-  getPref() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      _loginName= preferences.getString("name")!;
+
+  void initState() {
+    super.initState();
+    getPref();
+  }
 
 
-    });
-  @override
+
+
+
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:AppBar(
-        backgroundColor: Colors.amber,
-        leading: InkWell(child: Icon(Icons.compare_arrows),onTap: () async {
+        backgroundColor: Colors.purple,
+        leading: InkWell(child: Icon(Icons.arrow_back_ios_sharp),onTap: () async {
           SharedPreferences preferences = await SharedPreferences.getInstance();
           preferences.clear();
           Navigator.pushReplacementNamed(context, "/login");
@@ -64,14 +66,14 @@ var _loginName="";
         child: ListTile(
 
           leading: Icon(
-         Icons.person, color: Colors.amberAccent,),
+         Icons.person, color: Colors.purpleAccent,),
     title: Text("User1",style: TextStyle(
     fontSize: 20,
-    color: Colors.amberAccent,
+    color: Colors.purple,
     fontWeight: FontWeight.bold,
     ), ),
     trailing: Icon(
-    Icons.edit, color: Colors.amberAccent,),
+    Icons.edit, color: Colors.purpleAccent,),
 
 
 
@@ -82,11 +84,13 @@ var _loginName="";
       ),
     );
   }
-}
+  var _loginName="";
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _loginName= preferences.getString("name")!;
+    });
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
   }
-}
+

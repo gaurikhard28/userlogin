@@ -35,7 +35,7 @@ class _signupState extends State<signup> {
       return Scaffold(
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.white,
         body: Container(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +46,7 @@ class _signupState extends State<signup> {
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w900,
-                    color: Colors.black,
+                    color: Colors.purple,
 
                   ),),
               ),
@@ -109,7 +109,7 @@ class _signupState extends State<signup> {
 
 
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.black,
+                                  primary: Colors.purpleAccent,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
@@ -148,7 +148,7 @@ class _signupState extends State<signup> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w900,
-                        color: Colors.white,
+                        color: Colors.purple,
                       ),),
                   ),
                 ),
@@ -167,7 +167,8 @@ class _signupState extends State<signup> {
         padding: const EdgeInsets.all(10.0),
         child: TextFormField(
 
-          decoration: InputDecoration(labelText: 'Phone'),
+          decoration: InputDecoration(labelText: 'Phone',
+              labelStyle: TextStyle(color: Colors.purpleAccent)),
           controller: _contactController,
           onSaved: (val) {
             phone = val!;
@@ -179,7 +180,8 @@ class _signupState extends State<signup> {
       return Padding(
         padding: const EdgeInsets.all(10.0),
         child: TextFormField(
-          decoration: InputDecoration(labelText: 'Password'),
+          decoration: InputDecoration(labelText: 'Password',
+              labelStyle: TextStyle(color: Colors.purpleAccent)),
           controller: _passwordController,
           onSaved: (val) {
             password = val!;
@@ -192,7 +194,8 @@ class _signupState extends State<signup> {
         padding: const EdgeInsets.all(10.0),
         child: TextFormField(
 
-          decoration: InputDecoration(labelText: 'Name'),
+          decoration: InputDecoration(labelText: 'Name',
+              labelStyle: TextStyle(color: Colors.purpleAccent)),
           controller: _nameController,
           onSaved: (val) {
             name = val!;
@@ -200,7 +203,7 @@ class _signupState extends State<signup> {
         ),
       );
     }
-  signup(name,phone,password) async
+  signup(name,contact ,password) async
   {
     setState(() {
       isLoading = true;
@@ -208,11 +211,11 @@ class _signupState extends State<signup> {
     print("Calling");
 
     Map data = {
-      'phone': phone,
-      'password': password,
-      'name': name
+      "contact":contact ,
+      "password": password,
+      "name": "$name"
     };
-    print(data.toString());
+    print(data);
     final response = await http.post(
         Uri.parse("https://sandbox.9930i.com/central/register"),
         headers: {
@@ -224,34 +227,35 @@ class _signupState extends State<signup> {
         body: data,
         encoding: Encoding.getByName("utf-8")
     );
-
+ print(response.body);
     if (response.statusCode == 200) {
       setState(() {
         isLoading = false;
       });
-      Map<String, dynamic>resposne = jsonDecode(response.body);
+      Map<String, dynamic> resposne = jsonDecode(response.body);
       if (resposne['status'] == 0) {
         Map<String, dynamic>user = resposne['data'];
-        print(" User name ${user['data']}");
-        savePref(user['status'], user['name'], user['phone'], user['email']);
+        print(" User name ${user['user_id']}");
+        savePref(resposne['status'], user['name'], user['phone'], user['token']);
         Navigator.pushReplacementNamed(context, "/profile");
+
       } else {
-        print(" ${resposne['message']}");
+        print("Already Registered");
       }
       scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text("${resposne['message']}")));
+          SnackBar(content: Text("Already Registered")));
     } else {
       scaffoldMessenger.showSnackBar(
           SnackBar(content: Text("Please Try again")));
     }
   }
-    savePref(int status, String name, String phone, String email) async {
+    savePref(int status, String name, String phone, String token) async {
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
       preferences.setInt("status", status.toInt());
       preferences.setString("name", name);
       preferences.setString("phone", phone);
-      preferences.setString("email", email);
+      preferences.setString("token", token);
     }
 
 

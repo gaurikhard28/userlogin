@@ -19,9 +19,9 @@ class _profile_detailsState extends State<profile_details> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.purple,
         body: Padding(
-          padding: const EdgeInsets.all(25.0),
+          padding: const EdgeInsets.all(20.0),
 
           child: Container(
             color: Colors.white,
@@ -42,11 +42,11 @@ class _profile_detailsState extends State<profile_details> {
                 ),
                 AddressField(),
                 SizedBox(
-                  height: 10,
+                  height: 60,
                 ),
                 Container(
-                  height: 80,
-                  padding: EdgeInsets.only(left: 25, right: 25, bottom: 20),
+                  height: 60,
+                  padding: EdgeInsets.only(left: 25, right: 25),
                   width: 244,
                   child: ElevatedButton(
                     onPressed: () {
@@ -58,7 +58,7 @@ class _profile_detailsState extends State<profile_details> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.amber,
+                      primary: Colors.purpleAccent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -87,7 +87,7 @@ class _profile_detailsState extends State<profile_details> {
       child: TextFormField(
 
         decoration: InputDecoration(labelText: 'Name',
-            labelStyle: TextStyle(color: Colors.amber)),
+            labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _nameController,
 
       ),
@@ -99,7 +99,7 @@ class _profile_detailsState extends State<profile_details> {
       child: TextFormField(
 
         decoration: InputDecoration(labelText: 'Email',
-        labelStyle: TextStyle(color: Colors.amber)),
+        labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _EmailController,
 
       ),
@@ -111,7 +111,7 @@ class _profile_detailsState extends State<profile_details> {
       child: TextFormField(
 
         decoration: InputDecoration(labelText: 'Phone' ,
-            labelStyle: TextStyle(color: Colors.amber)),
+            labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _PhoneController,
 
       ),
@@ -123,7 +123,7 @@ class _profile_detailsState extends State<profile_details> {
       child: TextFormField(
 
         decoration: InputDecoration(labelText: 'Address',
-            labelStyle: TextStyle(color: Colors.amber)),
+            labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _AddressController,
 
       ),

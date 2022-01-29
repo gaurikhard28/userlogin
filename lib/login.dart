@@ -32,7 +32,7 @@ class _login_pageState extends State<login_page> {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.amber,
+      backgroundColor: Colors.white,
       body:Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -43,11 +43,11 @@ class _login_pageState extends State<login_page> {
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w900,
-                  color: Colors.black,
+                  color: Colors.purple,
 
                 ),),
             ),
-            SizedBox(
+             SizedBox(
               height: 20,
             ),
             Form(
@@ -76,26 +76,25 @@ class _login_pageState extends State<login_page> {
                               borderRadius: BorderRadius.circular(50),
                             ),
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async{
 
                                   if (isLoading) {
                                     return;
                                   }
                                   if (_contactController.text.isEmpty ||
                                       _passwordController.text.isEmpty) {
-                                    scaffoldMessenger.showSnackBar(SnackBar(
+
+                                    scaffoldMessenger.showSnackBar(const SnackBar(
                                         content: Text(
                                             "Please Fill all fileds")));
                                     return;
                                   }
                                   login(_contactController.text,
                                       _passwordController.text);
-                                  setState(() {
-                                    isLoading = true;
-                                  });
+
                                 },
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.black,
+                                primary: Colors.purpleAccent,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
@@ -111,9 +110,9 @@ class _login_pageState extends State<login_page> {
                             ),
                             ),
 
-                        ],),
-                        Positioned(child: (isLoading)?Center(child: Container(height:26,width: 26,child: CircularProgressIndicator(backgroundColor: Colors.black,))):Container(),right: 30,bottom: 0,top: 0,)
 
+                        Positioned(child: (isLoading)?Center(child: Container(height:26,width: 26,child: CircularProgressIndicator(backgroundColor: Colors.black,))):Container(),right: 30,bottom: 0,top: 0,)
+                      ],),
                       ],
                     ),
     ),
@@ -134,7 +133,7 @@ class _login_pageState extends State<login_page> {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w900,
-                      color: Colors.white,
+                      color: Colors.purple,
                     ),),
                 ),
               ),
@@ -150,7 +149,8 @@ class _login_pageState extends State<login_page> {
       padding: const EdgeInsets.all(10.0),
       child: TextFormField(
 
-        decoration: InputDecoration(labelText: 'Phone'),
+        decoration: InputDecoration(labelText: 'Phone',
+            labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _contactController,
         validator: (value)=>null,
         onSaved: (val) {
@@ -164,7 +164,8 @@ class _login_pageState extends State<login_page> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: TextFormField(
-        decoration: InputDecoration(labelText: 'Password'),
+        decoration: InputDecoration(labelText: 'Password',
+            labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _passwordController,
         validator: (value)=>null,
         onSaved: (val) {
@@ -176,6 +177,9 @@ class _login_pageState extends State<login_page> {
 
   login(contact,password) async
   {
+    setState(() {
+      isLoading = true;
+    });
     Map data = {
       'contact': contact,
       'password': password
@@ -193,13 +197,14 @@ class _login_pageState extends State<login_page> {
     setState(() {
       var isLoading=false;
     });
+    print(response.body);
     if (response.statusCode == 200) {
       Map<String,dynamic> resposne=jsonDecode(response.body);
       if(resposne['status']==0)
       {
         Map<String,dynamic> user=resposne['data'];
-        print(" Name ${user['name']}");
-        savePref(user['status'],user['name'],user['phone'],user['email']);
+        print(" Name ${user['user_id']}");
+        savePref(resposne['status'],user['name'],user['phone'],user['token']);
         Navigator.pushReplacementNamed(context, "/profile");
       }else{
         print(" ${resposne['message']}");
@@ -212,15 +217,14 @@ class _login_pageState extends State<login_page> {
 
 
   }
-  savePref(int status, String name, String phone, String email) async {
+  savePref(int status, String name, String phone, String token) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    preferences.setInt("status", status);
+    preferences.setInt("status", status.toInt());
     preferences.setString("name", name);
     preferences.setString("phone", phone);
-    preferences.setString("email", email);
+    preferences.setString("token", token);
 
-    preferences.commit();
 
   }
 
