@@ -42,15 +42,6 @@ class _profileState extends State<profile> {
           ),),
         centerTitle: true,
         actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                  builder: (BuildContext context) => const profile_details()), (
-                  Route<dynamic> route) => false);
-            },
-            icon: const Icon(Icons.person_add_rounded,
-              color: Colors.white,),
-          ),
           FlatButton(
             onPressed: () {
 
@@ -81,6 +72,16 @@ class _profileState extends State<profile> {
     ),
 
 
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+              builder: (BuildContext context) => const profile_details()), (
+              Route<dynamic> route) => false);
+        },
+        backgroundColor: Colors.purple,
+        child: const Icon(Icons.person_add_rounded,
+          color: Colors.white,),
       ),
     );
   }

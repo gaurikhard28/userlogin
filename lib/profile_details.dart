@@ -78,6 +78,7 @@ class _profile_detailsState extends State<profile_details> {
 
           ),
         ),
+
       ),
     );
   }
