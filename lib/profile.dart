@@ -14,6 +14,14 @@ class profile extends StatefulWidget {
 }
 
 class _profileState extends State<profile> {
+var _loginName="";
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _loginName= preferences.getString("name")!;
+
+
+    });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +33,7 @@ class _profileState extends State<profile> {
           Navigator.pushReplacementNamed(context, "/login");
         },),
 
-        title: Text("",
+        title: Text(_loginName,
           style: TextStyle(
             fontSize: 20,
             color: Colors.white,
@@ -73,5 +81,12 @@ class _profileState extends State<profile> {
 
       ),
     );
+  }
+}
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }
