@@ -1,16 +1,23 @@
 import 'package:example/profile.dart';
+import 'package:example/userDetails.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class profile_details extends StatefulWidget {
 
-  const profile_details({Key? key}) : super(key: key);
+  const profile_details(userDetails user,  {Key? key}) : super(key: key);
 
   @override
   _profile_detailsState createState() => _profile_detailsState();
 }
 
 class _profile_detailsState extends State<profile_details> {
-  final _EmailController = TextEditingController();
+
+  void initState() {
+    super.initState();
+    getPref();
+  }
+final _EmailController = TextEditingController();
   final _PhoneController = TextEditingController();
   final _AddressController = TextEditingController();
   final _nameController = TextEditingController();
@@ -129,5 +136,12 @@ class _profile_detailsState extends State<profile_details> {
 
       ),
     );
+  }
+  var _loginToken="";
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _loginToken= preferences.getString("token")!;
+    });
   }
 }

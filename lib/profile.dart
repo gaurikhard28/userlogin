@@ -2,6 +2,7 @@ import 'package:example/profile_details.dart';
 import 'package:example/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'userDetails.dart';
 
 
 class profile extends StatefulWidget {
@@ -14,18 +15,14 @@ class profile extends StatefulWidget {
 }
 
 class _profileState extends State<profile> {
-
+  late final List<userDetails> users;
   void initState() {
     super.initState();
     getPref();
   }
-
-
-
-
-
-    @override
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar:AppBar(
         backgroundColor: Colors.purple,
@@ -52,32 +49,59 @@ class _profileState extends State<profile> {
             child: const Text("Log Out", style: TextStyle(color: Colors.white),),
           ),],
       ),
-      body: Container(
-        color: Colors.white,
-        child: ListTile(
+      body: ListView.builder(
+          itemCount: users == null ? 0 : users.length,
+          itemBuilder: (BuildContext context, int index) {
+          return Card(
+          child: InkWell(
+          onTap: ()
+          {
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => profile_details(users[index])),
+            );},
+            child:
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(users[index].name),
+                        Text(users[index].email),
+                        Text(users[index].phone),
 
-          leading: Icon(
-         Icons.person, color: Colors.purpleAccent,),
-    title: Text("User1",style: TextStyle(
-    fontSize: 20,
-    color: Colors.purple,
-    fontWeight: FontWeight.bold,
-    ), ),
-    trailing: Icon(
-    Icons.edit, color: Colors.purpleAccent,),
 
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () async {},
+                    icon: const Icon(Icons.edit,
+                      color: Colors.purpleAccent,),
+                  ),
+                  IconButton(
+                    onPressed: () {
 
+                    },
+                    icon: const Icon(Icons.delete, color: Colors.purpleAccent,
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-
+                  ),
+          );
+    }
     ),
 
 
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-              builder: (BuildContext context) => const profile_details()), (
-              Route<dynamic> route) => false);
+
         },
         backgroundColor: Colors.purple,
         child: const Icon(Icons.person_add_rounded,
