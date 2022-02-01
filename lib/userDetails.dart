@@ -6,10 +6,11 @@ class userDetails {
   final String phone;
 
 
-  userDetails( {  required this.Authorization, required this.name, required this.address, required this.email, required this.phone });
+  userDetails( { required this.Authorization, required this.name, required this.address, required this.email, required this.phone });
 
   factory userDetails.fromJson(Map<String, dynamic> json) {
     return userDetails(
+
       Authorization: json['Authorization'] as String,
       name: json['name'] as String,
       address: json['address'] as String,
@@ -20,6 +21,6 @@ class userDetails {
 
   @override
   String toString() {
-    return 'userDetails{id: $email, name: $name, phone: $phone, Authorization: $Authorization  }';
+    return 'userDetails{ email: $email, name: $name, phone: $phone, Authorization: $Authorization  }';
   }
 }
