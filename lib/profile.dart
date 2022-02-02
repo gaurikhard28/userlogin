@@ -74,9 +74,9 @@ class _profileState extends State<profile> {
                                child: Column(
                                  crossAxisAlignment: CrossAxisAlignment.start,
                                  children: <Widget>[
-                                   Text(users![index].name),
-                                   Text(users![index].email),
-                                   Text(users![index].phone),
+                                   Text(userupdate![index].name.toString()),
+                                   Text(userupdate![index].email.toString()),
+                                   Text(userupdate![index].phone.toString()),
 
 
                                  ],
