@@ -87,7 +87,7 @@ class ApiService {
     }
   }
 
-  Future<bool> deleteUser(String id, String Authorization) async {
+  Future<void> deleteUser(String id, String Authorization) async {
     Map<String, String> datahead = {
       'Authorization': Authorization,
     };
@@ -104,11 +104,8 @@ class ApiService {
     print(id);
     if (res.statusCode == 200) {
       Map<String, dynamic> resposne = jsonDecode(res.body);
-      if (resposne['status'] == 0) {
-        return true;
-      }
-      else
-        return false;
+
+
 
     } else {
       throw "Failed to delete a case.";

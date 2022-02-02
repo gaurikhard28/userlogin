@@ -97,13 +97,14 @@ class _profileState extends State<profile> {
                              ),
                              IconButton(
                                onPressed: () {
-                                 {
+
                                    String id;
-                                   bool del= api.deleteUser(
-                                       userupdate![index].id.toString(), _loginToken) as bool;
-                                      if(del==true)
-                                        loadListWithId();
-                                 };
+                                    api.deleteUser(
+                                       userupdate![index].id.toString(), _loginToken).whenComplete(() =>
+                                       setState((){
+                                         loadListWithId();
+                                       }));
+
                                },
                                icon: const Icon(
                                  Icons.delete, color: Colors.purpleAccent,
@@ -126,7 +127,9 @@ class _profileState extends State<profile> {
         onPressed: () async {
           await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => profile_details()));
+              MaterialPageRoute(builder: (context) => profile_details())).whenComplete(() => setState((){
+          loadListWithId();
+          }));
         },
         backgroundColor: Colors.purple,
         child: const Icon(Icons.person_add_rounded,
@@ -151,8 +154,10 @@ class _profileState extends State<profile> {
        MaterialPageRoute(builder: (context) => editUser(
            id,name,phone,email,address),),
 
-     );
-     return editUser(id, name, phone, email, address);
+     ).whenComplete(() => setState((){
+       loadListWithId();
+     }));
+
    }
 
   var _loginName="";
