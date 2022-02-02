@@ -60,7 +60,7 @@ class _profileState extends State<profile> {
         
           future: loadListWithId(),
           builder: (context,AsyncSnapshot<List<Datum>> snapshot) {
-            userupdate= snapshot.data;
+            userupdate = snapshot.data as List<Datum>;
              if(snapshot.hasData) {
                return ListView.builder(
                    itemCount: userupdate== null ? 0 : userupdate!.length,
@@ -84,18 +84,13 @@ class _profileState extends State<profile> {
                                ),
                              ),
                              IconButton(
-                               onPressed: () async {
-                                 await Navigator.push(
-                                   context,
-                                   MaterialPageRoute(
-                                       builder: (context) =>
-                                           editUser((
-                                               userupdate![index].id.toString()),
-                                               userupdate![index].name.toString(),
-                                       userupdate![index].phone.toString(),
-                                               userupdate![index].email.toString(),
-                                     userupdate![index].address.toString())),
-                                 );
+                               onPressed: ()  {
+                                 _navigateToEditScreen(context, (
+                                     userupdate![index].id.toString()),
+                                     userupdate![index].name.toString(),
+                                     userupdate![index].phone.toString(),
+                                     userupdate![index].email.toString(),
+                                     userupdate![index].address.toString());
                                },
                                icon: const Icon(Icons.edit,
                                  color: Colors.purpleAccent,),
@@ -149,6 +144,16 @@ class _profileState extends State<profile> {
     print("userupdate $userupdate");
     return futureCases;
   }
+
+   _navigateToEditScreen (BuildContext context, String id, String name, String phone, String email, String address) async {
+     final result = await Navigator.push(
+       context,
+       MaterialPageRoute(builder: (context) => editUser(
+           id,name,phone,email,address),),
+
+     );
+     return editUser(id, name, phone, email, address);
+   }
 
   var _loginName="";
   var _loginToken="";

@@ -109,7 +109,7 @@ class ApiService {
       }
       else
         return false;
-      print("Case deleted");
+
     } else {
       throw "Failed to delete a case.";
 
