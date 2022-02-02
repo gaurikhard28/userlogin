@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'apiService.dart';
 import 'editUser.dart';
-import 'userDetails.dart';
+
 
 
 class profile extends StatefulWidget {
@@ -18,8 +18,8 @@ class profile extends StatefulWidget {
 }
 
 class _profileState extends State<profile> {
-  late final List<userDetails>? users;
-  late final List<Datum>? userupdate;
+
+   List<Datum>? userupdate;
    ApiService api = ApiService();
   void initState() {
     super.initState();
@@ -56,13 +56,14 @@ class _profileState extends State<profile> {
             child: const Text("Log Out", style: TextStyle(color: Colors.white),),
           ),],
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<Datum>>(
         
           future: loadListWithId(),
-          builder: (context,snapshot) {
+          builder: (context,AsyncSnapshot<List<Datum>> snapshot) {
+            userupdate= snapshot.data;
              if(snapshot.hasData) {
                return ListView.builder(
-                   itemCount: userupdate == null ? 0 : userupdate!.length,
+                   itemCount: userupdate== null ? 0 : userupdate!.length,
                    itemBuilder: (BuildContext context, int index) {
                      return Card(
                        child:
@@ -88,7 +89,12 @@ class _profileState extends State<profile> {
                                    context,
                                    MaterialPageRoute(
                                        builder: (context) =>
-                                           editUser(userupdate![index].id.toString())),
+                                           editUser((
+                                               userupdate![index].id.toString()),
+                                               userupdate![index].name.toString(),
+                                       userupdate![index].phone.toString(),
+                                               userupdate![index].email.toString(),
+                                     userupdate![index].address.toString())),
                                  );
                                },
                                icon: const Icon(Icons.edit,
@@ -98,11 +104,10 @@ class _profileState extends State<profile> {
                                onPressed: () {
                                  {
                                    String id;
-                                   api.deleteUser(
-                                       userupdate![index].id.toString(), _loginToken);
-                                   Navigator.popUntil(
-                                       context, ModalRoute.withName(
-                                       Navigator.defaultRouteName));
+                                   bool del= api.deleteUser(
+                                       userupdate![index].id.toString(), _loginToken) as bool;
+                                      if(del==true)
+                                        loadListWithId();
                                  };
                                },
                                icon: const Icon(
@@ -122,9 +127,6 @@ class _profileState extends State<profile> {
                return Center(child: CircularProgressIndicator(backgroundColor: Colors.purpleAccent,));
                 }
             ),
-
-
-
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Navigator.push(
@@ -137,12 +139,14 @@ class _profileState extends State<profile> {
       ),
     );
   }
-
-  Future loadListWithId()async {
-    List<Datum> futureCases = await api.getUsersWithId(_loginToken);
+  Future<List<Datum>> loadListWithId()async {
+    var futureCases = await api.getUsersWithId(_loginToken);
     //setState(() {
     //  this.userupdate = userupdate;
     //});
+    print("loadListWithId  $futureCases");
+    //userupdate=futureCases;
+    print("userupdate $userupdate");
     return futureCases;
   }
 

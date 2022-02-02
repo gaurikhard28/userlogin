@@ -1,13 +1,12 @@
 import 'package:example/updateDetails.dart';
-import 'package:example/userDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'apiService.dart';
 
 class editUser extends StatefulWidget {
-  final String id;
-  const editUser(this.id,  {Key? key, } ) : super(key: key);
+  final String id,phone,name,address,email;
+  const editUser(this.id, this.name, this.phone,this.email,this.address, {Key? key, } ) : super(key: key);
 
   @override
   _editUserState createState() => _editUserState();
@@ -17,18 +16,26 @@ class _editUserState extends State<editUser> {
   ApiService api = ApiService();
   @override
   void initState() {
+    _nameController.text = widget.name;
+    _EmailController.text = widget.email;
+    _PhoneController.text = widget.phone;
+    _AddressController.text= widget.address;
+
+
+
     super.initState();
     getPref();
   }
 
   late ScaffoldMessengerState scaffoldMessenger;
-
+  var reg =RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  var regnum=RegExp("^[0-9]");
   final _addFormKey = GlobalKey<FormState>();
   final _EmailController = TextEditingController();
   final _PhoneController = TextEditingController();
   final _AddressController = TextEditingController();
   final _nameController = TextEditingController();
-
+  var name, email,address,phone;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,7 +44,7 @@ class _editUserState extends State<editUser> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.purpleAccent,
         appBar: AppBar(
-          title: Text('Add Cases'),
+          title: Text('Edit Cases'),
           backgroundColor: Colors.purple,
         ),
         body: Padding(
@@ -72,15 +79,35 @@ class _editUserState extends State<editUser> {
                       width: 244,
                       child: ElevatedButton(
                         onPressed: () {
+                          if(_nameController.text.isEmpty)
+                          {
+                            scaffoldMessenger.showSnackBar(SnackBar(content:Text("Please Enter Name")));
+                            return;
+                          }
+
+                            if(!reg.hasMatch(_EmailController.text)||_EmailController.text.isEmpty)
+                               {
+                                 scaffoldMessenger.showSnackBar(SnackBar(content:Text("Enter Valid Email")));
+                                       return;}
+                          if(_PhoneController.text.isEmpty||_PhoneController.text.length!=10||!regnum.hasMatch(_PhoneController.text))
+                          {
+                            scaffoldMessenger.showSnackBar(SnackBar(content:Text("Phone Number should be 10 digits")));
+                            return;}
+                          if(_AddressController.text.isEmpty)
+                          {
+                            scaffoldMessenger.showSnackBar(SnackBar(content:Text("Please Enter address")));
+                            return;
+                          }
+
                           if (_addFormKey.currentState!.validate()) {
                             _addFormKey.currentState!.save();
 
                             api.updateUser(widget.id,
-                                userDetails(name: _nameController.text,
+                                Datum(name: _nameController.text,
                                   address: _AddressController.text,
                                   email: _EmailController.text,
-                                  phone: _PhoneController.text,
-                                  Authorization: _loginToken,));
+                                  phone: _PhoneController.text,),
+                                  _loginToken,);
                           }
                           Navigator.pop(context) ;
                         },
@@ -93,7 +120,7 @@ class _editUserState extends State<editUser> {
                         ),
 
                         child:
-                        const Text("Add User",
+                        const Text("Edit User",
                           style: TextStyle(
                             fontSize: 25,
                             color: Colors.white,
@@ -121,12 +148,8 @@ class _editUserState extends State<editUser> {
         decoration: InputDecoration(labelText: 'Name',
             labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _nameController,
-        validator: (value) {
-          if (value!.isEmpty) {
-            scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text("Please enter name")));
-          }
-          return null;
+        onSaved: (val) {
+          name = val!;
         },
       ),
     );
@@ -140,12 +163,8 @@ class _editUserState extends State<editUser> {
         decoration: InputDecoration(labelText: 'Email',
             labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _EmailController,
-        validator: (value) {
-          if (value!.isEmpty) {
-            scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text("Please enter email")));
-          }
-          return null;
+        onSaved: (val) {
+          email = val!;
         },
 
       ),
@@ -160,12 +179,8 @@ class _editUserState extends State<editUser> {
         decoration: InputDecoration(labelText: 'Phone',
             labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _PhoneController,
-        validator: (value) {
-          if (value!.isEmpty) {
-            scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text("Please enter phone")));
-          }
-          return null;
+        onSaved: (val) {
+          phone = val!;
         },
       ),
     );
@@ -179,12 +194,8 @@ class _editUserState extends State<editUser> {
         decoration: InputDecoration(labelText: 'Address',
             labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _AddressController,
-        validator: (value) {
-          if (value!.isEmpty) {
-            scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text("Please enter address")));
-          }
-          return null;
+        onSaved: (val) {
+          address = val!;
         },
       ),
     );

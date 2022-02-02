@@ -1,5 +1,5 @@
 import 'package:example/profile.dart';
-import 'package:example/userDetails.dart';
+import 'package:example/updateDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,7 +7,7 @@ import 'apiService.dart';
 
 class profile_details extends StatefulWidget {
 
-  const profile_details({ userDetails? user,  Key? key}) : super(key: key);
+  const profile_details({ Datum? user,  Key? key}) : super(key: key);
 
   @override
   _profile_detailsState createState() => _profile_detailsState();
@@ -25,16 +25,20 @@ final _EmailController = TextEditingController();
   final _PhoneController = TextEditingController();
   final _AddressController = TextEditingController();
   final _nameController = TextEditingController();
+  var reg=RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  var regnum=RegExp("^[0-9]");
+  var name, email,address,phone;
 
   @override
   Widget build(BuildContext context) {
+    scaffoldMessenger = ScaffoldMessenger.of(context);
     return SafeArea(
 
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.purpleAccent,
         appBar: AppBar(
-          title: Text('Edit Cases'),
+          title: Text('Add Cases'),
           backgroundColor: Colors.purple,
         ),
         body: Padding(
@@ -69,13 +73,34 @@ final _EmailController = TextEditingController();
                     width: 244,
                     child: ElevatedButton(
                       onPressed: () {
+
+                        if(_nameController.text.isEmpty)
+                        {
+                          scaffoldMessenger.showSnackBar(SnackBar(content:Text("Please Enter Name")));
+                          return;
+                        }
+
+                        if(!reg.hasMatch(_EmailController.text)||_EmailController.text.isEmpty)
+                        {
+                          scaffoldMessenger.showSnackBar(SnackBar(content:Text("Enter Valid Email")));
+                          return;}
+                        if(_PhoneController.text.isEmpty||_PhoneController.text.length!=10||!regnum.hasMatch(_PhoneController.text))
+                        {
+                          scaffoldMessenger.showSnackBar(SnackBar(content:Text("Phone Number should be 10 digits")));
+                          return;}
+                        if(_AddressController.text.isEmpty)
+                        {
+                          scaffoldMessenger.showSnackBar(SnackBar(content:Text("Please Enter address")));
+                          return;
+                        }
                         if (_addFormKey.currentState!.validate()) {
                           _addFormKey.currentState!.save();
-                          api.addUser(userDetails(name: _nameController.text,
-                            address: _AddressController.text,
+                          api.addUser(Datum(name: _nameController.text,
                             email: _EmailController.text,
                             phone: _PhoneController.text,
-                            Authorization: _loginToken,));
+                            address: _AddressController.text,),
+                             _loginToken,);
+                          print(_PhoneController.text);
                         }
 
                         Navigator.pop(context) ;
@@ -95,13 +120,11 @@ final _EmailController = TextEditingController();
                             color: Colors.white,
                           ),
                         ),
-
                     ),
                   ),
                 ],
               ),
             )
-
           ),
         ),
 
@@ -116,13 +139,9 @@ final _EmailController = TextEditingController();
         decoration: const InputDecoration(labelText: 'Name',
             labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _nameController,
-    validator: (value){
-    if (value!.isEmpty) {
-    scaffoldMessenger.showSnackBar(
-    const SnackBar(content: Text("Please enter name")));
-    }
-    return null;
-  },
+        onSaved: (val) {
+          name = val!;
+        },
       ),
     );
   }
@@ -134,14 +153,9 @@ final _EmailController = TextEditingController();
         decoration: const InputDecoration(labelText: 'Email',
         labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _EmailController,
-        validator: (value) {
-          if (value!.isEmpty) {
-            scaffoldMessenger.showSnackBar(
-                const SnackBar(content: Text("Please enter email")));
-          }
-          return null;
+        onSaved: (val) {
+          email = val!;
         },
-
       ),
     );
   }
@@ -153,13 +167,10 @@ final _EmailController = TextEditingController();
         decoration: const InputDecoration(labelText: 'Phone' ,
             labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _PhoneController,
-    validator: (value){
-    if (value!.isEmpty) {
-    scaffoldMessenger.showSnackBar(
-    const SnackBar(content: Text("Please enter phone")));
-    }
-    return null;
-  },
+
+        onSaved: (val) {
+          phone = val!;
+        },
       ),
     );
   }
@@ -171,13 +182,9 @@ final _EmailController = TextEditingController();
         decoration: const InputDecoration(labelText: 'Address',
             labelStyle: TextStyle(color: Colors.purpleAccent)),
         controller: _AddressController,
-    validator: (value){
-    if (value!.isEmpty) {
-    scaffoldMessenger.showSnackBar(
-    const SnackBar(content: Text("Please enter address")));
-    }
-    return null;
-  },
+        onSaved: (val) {
+          address = val!;
+        },
       ),
     );
   }
